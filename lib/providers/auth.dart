@@ -7,6 +7,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ujilevel_bk/helper/dio.dart';
 import 'package:ujilevel_bk/models/error.dart';
 import 'package:platform_device_id/platform_device_id.dart';
+import 'package:provider/provider.dart';
+
 
 import '../models/user.dart';
 
@@ -70,6 +72,27 @@ class Auth extends ChangeNotifier {
 
   void toggleText() {
     _obscureText = !_obscureText;
+    notifyListeners();
+  }
+
+  Future attempt(String? token) async {
+    try {
+      di.Response res = await dio().get(
+        'auth/user',
+        options: di.Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      _user = User.fromJson(res.data);
+
+      _authenticated = true;
+    } catch (e) {
+      log('error log ${e.toString()}');
+      _authenticated = false;
+    }
     notifyListeners();
   }
 }
