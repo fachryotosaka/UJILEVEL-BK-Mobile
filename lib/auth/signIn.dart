@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -11,10 +9,6 @@ import 'package:ujilevel_bk/home.dart';
 import 'package:ujilevel_bk/profile.dart';
 import 'package:ujilevel_bk/providers/auth.dart';
 import 'package:ujilevel_bk/widgets/custom_snack_bar.dart';
-import 'package:provider/provider.dart';
-
-
-
 
 class SignIn extends StatefulWidget {
   const SignIn({Key? key}) : super(key: key);
@@ -123,7 +117,7 @@ class _AuthFormState extends State<AuthForm> {
   @override
   void initState() {
     super.initState();
-    _email.text = 'fachrylord0@gmail.com';
+    _email.text = 'yudiya@gmail.com';
     _password.text = 'password';
   }
 
@@ -167,10 +161,13 @@ class _AuthFormState extends State<AuthForm> {
                 style: TextStyle(color: CusColors.subHeader),
                 decoration: textInputDecoration.copyWith(
                   contentPadding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  prefixIcon: Icon(
-                    IconlyLight.message,
-                    size: 10,
-                    color: CusColors.mainColor,
+                  prefixIcon: Container(
+                    margin: const EdgeInsets.only(left: 20, right: 15),
+                    child: Icon(
+                      IconlyLight.message,
+                      size: width * .05,
+                      color: CusColors.mainColor,
+                    ),
                   ),
                   isDense: true,
                   hintText: "you@example.com",
@@ -254,8 +251,7 @@ class _AuthFormState extends State<AuthForm> {
                         offset: const Offset(0, 4))
                   ]),
               child: ElevatedButton(
-                onPressed: () =>
-                    Get.to(submit(), transition: Transition.circularReveal),
+                onPressed: () => submit(),
                 style: ButtonStyle(
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(

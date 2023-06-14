@@ -7,8 +7,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ujilevel_bk/helper/dio.dart';
 import 'package:ujilevel_bk/models/error.dart';
 import 'package:platform_device_id/platform_device_id.dart';
-import 'package:provider/provider.dart';
-
 
 import '../models/user.dart';
 
@@ -18,7 +16,7 @@ class Auth extends ChangeNotifier {
   ValidationError? _validationError;
   ValidationError? get validationError => _validationError;
   User? get user => _user;
-  final storage = FlutterSecureStorage();
+  final storage = const FlutterSecureStorage();
   bool get authenticated => _authenticated;
   bool _obscureText = false;
 
@@ -27,11 +25,11 @@ class Auth extends ChangeNotifier {
   Future login({required Map credential}) async {
     String deviceId = await getDeviceId();
     try {
-      di.Response response = await dio().post('/auth/login',
+      di.Response response = await dio().post('auth/login',
           data: json.encode(credential..addAll({'deviceId': deviceId})));
       String token = await response.data['token'];
       await storeToken(token);
-    // ignore: deprecated_member_use
+      // ignore: deprecated_member_use
     } on di.DioError catch (e) {
       if (e.response?.statusCode == 422) {
         _validationError = ValidationError.fromJson(e.response!.data['errors']);
@@ -82,6 +80,7 @@ class Auth extends ChangeNotifier {
         options: di.Options(
           headers: {
             'Authorization': 'Bearer $token',
+            'Accept': "application/json",
           },
         ),
       );

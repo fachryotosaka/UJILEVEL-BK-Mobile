@@ -5,10 +5,11 @@ import 'package:provider/provider.dart';
 import 'package:ujilevel_bk/auth/signIn.dart';
 import 'package:ujilevel_bk/home.dart';
 import 'package:ujilevel_bk/providers/auth.dart';
+import 'package:ujilevel_bk/splash.dart';
 
 void main() {
   runApp(ChangeNotifierProvider(
-    create: (BuildContext context) => Auth(),
+    create: (context) => Auth(),
     child: const MyApp(),
   ));
 }
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SignIn(),
+      home: SplashScreen(),
     );
   }
 }
@@ -37,6 +38,7 @@ class _HomePageState extends State<HomePage> {
 
   void _attemptAuthentication() async {
     String? key = await storage.read(key: 'auth');
+
     // ignore: use_build_context_synchronously
     Provider.of<Auth>(context, listen: false).attempt(key);
   }
