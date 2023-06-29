@@ -117,7 +117,7 @@ class _AuthFormState extends State<AuthForm> {
   @override
   void initState() {
     super.initState();
-    _email.text = 'yudiya@gmail.com';
+    _email.text = 'yudiyastudent@gmail.com';
     _password.text = 'password';
   }
 

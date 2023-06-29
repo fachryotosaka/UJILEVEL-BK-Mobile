@@ -59,7 +59,7 @@ class Auth extends ChangeNotifier {
   Future logout() async {
     final token = await storage.read(key: 'auth');
     _authenticated = false;
-    await dio().delete('auth/logout',
+    await dio().post('auth/logout',
         data: {'deviceId': await getDeviceId()},
         options: di.Options(headers: {
           'Authorization': 'Bearer $token',

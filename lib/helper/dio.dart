@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 Dio dio() {
   var dio = Dio(
     BaseOptions(
-      baseUrl: 'https://f6b6-182-253-127-112.ngrok-free.app/api/',
+      baseUrl: 'https://e6b0-117-102-67-66.ngrok-free.app/api/',
       headers: {
         'accept': 'application/json',
         'content-type': 'application/json'
