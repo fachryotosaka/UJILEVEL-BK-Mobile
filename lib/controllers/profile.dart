@@ -1,56 +1,35 @@
-import 'package:dio/dio.dart';
+import 'dart:async';
+
+import 'package:dio/dio.dart' as di;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'dart:io';
+import 'package:ujilevel_bk/helper/dio.dart';
 
 class ProfileController {
   final storage = const FlutterSecureStorage();
-
-  Future<void> updateProfilePhoto(File photo) async {
-    final token = await storage.read(key: 'auth');
-    final formData = FormData.fromMap({
-      'photo': await MultipartFile.fromFile(photo.path),
-    });
-
-    final response = await Dio().put(
-      'http://127.0.0.1:8000/api/add-profile-photo',
-      data: formData,
-      options: Options(
-        headers: {
-          'Authorization': 'Bearer $token',
-        },
-      ),
-    );
-
-    if (response.statusCode == 200) {
-      print('Profile photo updated successfully');
-    } else {
-      throw Exception('Failed to update profile photo');
-    }
-  }
-
-  // Replace 'your_api_base_url' with the actual base URL of your backend server
-  String apiBaseUrl = 'http://127.0.0.1:8000/api';
 
   Future<void> addProfilePhoto(String filePath) async {
     try {
       // Get the user's token from your authentication system
       final token = await storage.read(key: 'auth');
 
-      Dio dio = Dio();
-      dio.options.headers['Authorization'] = 'Bearer $token';
-
-      FormData formData = FormData.fromMap({
-        'photo': await MultipartFile.fromFile(filePath),
+      di.FormData formData = di.FormData.fromMap({
+        'photo': await di.MultipartFile.fromFile(filePath),
       });
 
-      Response response =
-          await dio.post('$apiBaseUrl/addProfilePhoto', data: formData);
+      di.Response res = await dio().post('add-profile-photo',
+          options: di.Options(
+            headers: {
+              'Authorization': 'Bearer $token',
+              'Accept': 'application/json',
+            },
+          ),
+          data: formData);
 
-      if (response.statusCode == 200) {
+      if (res.statusCode == 200) {
         print('Profile photo updated');
         // Handle success, if needed
       } else {
-        print('Failed to update profile photo: ${response.data}');
+        print('Failed to update profile photo: ${res.data}');
         // Handle errors, if needed
       }
     } catch (e) {
@@ -58,4 +37,58 @@ class ProfileController {
       // Handle errors, if needed
     }
   }
+
+  Future<void> deleteProfilePhoto() async{
+    try {
+
+      final token = await storage.read(key: 'auth');
+
+      di.Response res = await dio().delete('delete-profile-photo',
+        options: di.Options(
+            headers: {
+              'Authorization': 'Bearer $token',
+              'Accept': 'application/json',
+            },
+          ),     
+      );
+
+    } catch (e) {
+      print('Error while deleting profile photo: $e');
+    }
+  }
+
+  final di.Dio _dio = di.Dio();
+
+  Future<void> updateProfile(String? userId, Map<String, dynamic> data) async {
+    final token = await storage.read(key: 'auth');
+
+    try {
+      di.Response res = await dio().put('edit-student/$userId',
+          options: di.Options(
+            headers: {
+              'Authorization': 'Bearer $token',
+              'Accept': 'application/json',
+            },
+          ),
+          data: data);
+
+      // print('$userId');
+
+      if (res.statusCode == 200) {
+        // Update successful
+        print('Data Berhasil Diedit!');
+        print(res.data);
+        
+
+      } else {
+        // Handle error scenarios
+        print('Update failed: ${res.data}');
+      }
+    } catch (error) {
+      // Handle Dio errors or network issues
+      print('Error: $error');
+    }
+  }
+
+  
 }

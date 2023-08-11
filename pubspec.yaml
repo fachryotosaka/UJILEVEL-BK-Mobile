@@ -48,6 +48,11 @@ dependencies:
   get:
   feather_icons: ^1.2.0
   image_picker: ^1.0.1
+  flutter_profile_picture: ^2.0.0
+  web_socket_channel: ^2.4.0
+  dropdown_button2: 2.3.7
+  multi_select_flutter: 4.1.3
+  flutter_speed_dial: 7.0.0
 
 dev_dependencies:
   flutter_test:

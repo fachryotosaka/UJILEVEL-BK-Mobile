@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:iconly/iconly.dart';
 import 'package:provider/provider.dart';
 import 'package:ujilevel_bk/components/constant.dart';
+import 'package:ujilevel_bk/editConsultation.dart';
 import 'package:ujilevel_bk/main.dart';
 import 'package:ujilevel_bk/models/consultation.dart';
 import 'package:ujilevel_bk/providers/auth.dart';
@@ -34,30 +35,32 @@ class Details extends StatelessWidget {
                           flex: 0,
                           child: Row(
                             children: [
-                              Flexible(
-                                flex: 1,
-                                child: GestureDetector(
-                                  onTap: () => Get.back(),
-                                  child: Container(
-                                    decoration: const BoxDecoration(
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: Text(
-                                      String.fromCharCode(CupertinoIcons
-                                          .chevron_left.codePoint),
-                                      style: TextStyle(
-                                          inherit: false,
-                                          color: const Color(0xFF0F1828),
-                                          fontSize: width * .045,
-                                          fontWeight: FontWeight.w700,
-                                          fontFamily: CupertinoIcons
-                                              .chevron_left.fontFamily,
-                                          package: CupertinoIcons
-                                              .chevron_left.fontPackage),
-                                    ),
+                              GestureDetector(
+                                onTap: () => Get.back(),
+                                child: Container(
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Text(
+                                    String.fromCharCode(CupertinoIcons
+                                        .chevron_left.codePoint),
+                                    style: TextStyle(
+                                        inherit: false,
+                                        color: const Color(0xFF0F1828),
+                                        fontSize: width * .045,
+                                        fontWeight: FontWeight.w700,
+                                        fontFamily: CupertinoIcons
+                                            .chevron_left.fontFamily,
+                                        package: CupertinoIcons
+                                            .chevron_left.fontPackage),
                                   ),
                                 ),
                               ),
+
+                              consultation.status == "waiting"
+                                  ? Spacer()
+                                  : Container(),
+
                               Flexible(
                                   flex: 20,
                                   child: Center(
@@ -68,7 +71,19 @@ class Details extends StatelessWidget {
                                           color: CusColors.header,
                                           fontSize: width * .045),
                                     ),
-                                  ))
+                                  )
+                              ),
+
+                              consultation.status == "waiting"
+                                ? GestureDetector(
+                                  onTap: () => Get.to(EditConsultation(),
+                                     transition: Transition.rightToLeftWithFade),
+                                  child: Icon(
+                                    Icons.edit_note_outlined,
+                                    color: CusColors.subHeader,
+                                  ),
+                                )
+                                : Container()
                             ],
                           )),
                       SizedBox(
@@ -307,7 +322,7 @@ class Details extends StatelessWidget {
                         color: Colors.black.withOpacity(.15))
                   ]),
                   child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () => Get.to(EditConsultation(), transition: Transition.fade),
                       style: ButtonStyle(
                         backgroundColor:
                             MaterialStatePropertyAll(CusColors.mainColor),
@@ -331,7 +346,15 @@ class Details extends StatelessWidget {
                         color: Colors.black.withOpacity(.15))
                   ]),
                   child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () => showAlert(
+                          context,
+                          title: "Confirm Canceling ",
+                          content: "Are you sure want to cancel your consultation?",
+                          onYes: (){
+                            Navigator.pop(context);
+                            Get.back();
+                          }
+                      ),
                       style: ButtonStyle(
                           backgroundColor:
                               const MaterialStatePropertyAll(Color(0xFFFF4377)),
@@ -350,6 +373,34 @@ class Details extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Future<void> showAlert(BuildContext context, {
+    required String? title,
+    required String? content,
+    required onYes,
+    onNo
+  }) async {
+    await showCupertinoDialog(
+        context: context,
+        builder: (BuildContext context) => CupertinoAlertDialog(
+          title: Text(title ?? "Alert"),
+          content: Text(content ?? "Are you sure?"),
+          actions: <CupertinoDialogAction>[
+            CupertinoDialogAction(
+              child: Text("Yes"),
+              onPressed: onYes ?? () {
+                Navigator.pop(context);
+              },
+            ),
+            CupertinoDialogAction(
+              child: Text("No"),
+              isDestructiveAction: true,
+              onPressed: onNo ?? () => Navigator.pop(context),
+            ),
+          ],
+        )
     );
   }
 }

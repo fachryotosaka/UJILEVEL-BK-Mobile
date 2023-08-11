@@ -9,6 +9,7 @@ import 'package:ujilevel_bk/models/error.dart';
 import 'package:platform_device_id/platform_device_id.dart';
 
 import '../models/user.dart';
+import '../models/profile.dart';
 
 class Auth extends ChangeNotifier {
   bool _authenticated = false;
@@ -16,6 +17,8 @@ class Auth extends ChangeNotifier {
   ValidationError? _validationError;
   ValidationError? get validationError => _validationError;
   User? get user => _user;
+  Profile? _profile;
+  Profile? get profile => _profile;
   final storage = const FlutterSecureStorage();
   bool get authenticated => _authenticated;
   bool _obscureText = false;
