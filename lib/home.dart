@@ -22,6 +22,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
   final isDialOpen = ValueNotifier(false);
   List<Consultation> _consultations = [];
 
@@ -44,6 +45,24 @@ class _HomeState extends State<Home> {
     }
   }
 
+  void _navigateAndPop() async {
+    await Get.to(
+      () => AddConsultation(
+        refreshCallback: () {
+          // This callback will be executed when you return to DestinationScreen.
+          // You can put your refresh logic here.
+          print('Refreshing DestinationScreen');
+        },
+      ),
+      transition: Transition.fade,
+    );
+
+    // This is called when you return from DestinationScreen
+    // You can put additional logic here if needed.
+    _fetchConsultation();
+    print('Returned from DestinationScreen');
+  }
+
   @override
   Widget build(BuildContext context) {
     print(_consultations);
@@ -51,15 +70,15 @@ class _HomeState extends State<Home> {
     double width = MediaQuery.of(context).size.width;
     return WillPopScope(
       onWillPop: () async {
-        if(isDialOpen.value){
+        if (isDialOpen.value) {
           isDialOpen.value = false;
           return false;
-        } else{
+        } else {
           return true;
         }
       },
       child: Scaffold(
-        resizeToAvoidBottomInset : false,
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
         floatingActionButton: SpeedDial(
           animatedIcon: AnimatedIcons.menu_close,
@@ -71,18 +90,16 @@ class _HomeState extends State<Home> {
           openCloseDial: isDialOpen,
           children: [
             SpeedDialChild(
-              child: Icon(Icons.add_rounded),
-              label: "Request Consule",
-              onTap: () => Get.to(AddConsultation(),
-                  transition: Transition.fade)
-            )
+                child: const Icon(Icons.add_rounded),
+                label: "Request Consule",
+                onTap: _navigateAndPop)
           ],
         ),
         body: Container(
           width: double.infinity,
           height: double.infinity,
           padding: EdgeInsets.symmetric(
-              horizontal: width * .05, vertical: height * .055),
+              horizontal: width * .05, vertical: height * .040),
           child: Consumer<Auth>(
             builder: ((context, auth, child) {
               if (auth.authenticated) {
@@ -117,7 +134,8 @@ class _HomeState extends State<Home> {
                               transition: Transition.fade),
                           child: CircleAvatar(
                             maxRadius: 25,
-                            backgroundColor: Color.fromARGB(255, 197, 197, 197),
+                            backgroundColor:
+                                const Color.fromARGB(255, 197, 197, 197),
                             child: CircleAvatar(
                               maxRadius: 22,
                               backgroundImage: NetworkImage(auth.user!.photo),
@@ -138,7 +156,8 @@ class _HomeState extends State<Home> {
                       ),
                       decoration: InputDecoration(
                           prefixIcon: Container(
-                              margin: const EdgeInsets.only(right: 20, left: 15),
+                              margin:
+                                  const EdgeInsets.only(right: 20, left: 15),
                               child: Icon(
                                 IconlyLight.search,
                                 color: CusColors.subHeader.withOpacity(.5),
@@ -160,8 +179,7 @@ class _HomeState extends State<Home> {
                               fontSize: width * .028,
                               letterSpacing: .5),
                           suffixIcon: GestureDetector(
-                            onTap: () => Get.to(() => const AddConsultation(),
-                                transition: Transition.fade),
+                            onTap: _navigateAndPop,
                             child: Container(
                                 margin: const EdgeInsets.only(right: 10),
                                 child: Icon(
@@ -192,7 +210,8 @@ class _HomeState extends State<Home> {
                         itemBuilder: (context, index) {
                           final consultation = _consultations[index];
                           return GestureDetector(
-                            onTap: () => Get.to(Details(consultation: consultation),
+                            onTap: () => Get.to(
+                                Details(consultation: consultation),
                                 transition: Transition.leftToRightWithFade),
                             child: Stack(children: [
                               Container(
@@ -202,10 +221,9 @@ class _HomeState extends State<Home> {
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
                                     border: Border.all(
-                                        color: const Color(0xffE2E8F0),
-                                        width: 1.5,
-                                    )
-                                ),
+                                      color: const Color(0xffE2E8F0),
+                                      width: 1.5,
+                                    )),
                               ),
                               Container(
                                 height: height * .12,
@@ -216,10 +234,9 @@ class _HomeState extends State<Home> {
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(10),
                                     border: Border.all(
-                                        color: const Color(0xffE2E8F0),
-                                        width: 1.5,
-                                    )
-                                ),
+                                      color: const Color(0xffE2E8F0),
+                                      width: 1.5,
+                                    )),
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -236,8 +253,7 @@ class _HomeState extends State<Home> {
                                             style: GoogleFonts.mulish(
                                                 color: const Color(0xff1E293B),
                                                 fontWeight: FontWeight.w700,
-                                                fontSize: width * .05
-                                              ),
+                                                fontSize: width * .05),
                                           ),
                                           SizedBox(
                                             height: height * .02,
@@ -245,20 +261,22 @@ class _HomeState extends State<Home> {
                                           Text(
                                             consultation.description!,
                                             style: GoogleFonts.mulish(
-                                                color: CusColors.footer,
-                                                fontSize: width * .025,
-                                              ),
+                                              color: CusColors.footer,
+                                              fontSize: width * .025,
+                                            ),
                                           )
                                         ],
                                       ),
                                     ),
                                     Container(
-                                      margin: EdgeInsets.only(top: height * .005),
+                                      margin:
+                                          EdgeInsets.only(top: height * .005),
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 10, vertical: 8),
                                       decoration: BoxDecoration(
                                           color: const Color(0xffFFF9F0),
-                                          borderRadius: BorderRadius.circular(8)),
+                                          borderRadius:
+                                              BorderRadius.circular(8)),
                                       child: Text(
                                         consultation.status!,
                                         style: GoogleFonts.mulish(
