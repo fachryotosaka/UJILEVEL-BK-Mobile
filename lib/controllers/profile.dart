@@ -38,26 +38,23 @@ class ProfileController {
     }
   }
 
-  Future<void> deleteProfilePhoto() async{
+  Future<void> deleteProfilePhoto() async {
     try {
-
       final token = await storage.read(key: 'auth');
 
-      di.Response res = await dio().delete('delete-profile-photo',
+      di.Response res = await dio().delete(
+        'delete-profile-photo',
         options: di.Options(
-            headers: {
-              'Authorization': 'Bearer $token',
-              'Accept': 'application/json',
-            },
-          ),     
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Accept': 'application/json',
+          },
+        ),
       );
-
     } catch (e) {
       print('Error while deleting profile photo: $e');
     }
   }
-
-  final di.Dio _dio = di.Dio();
 
   Future<void> updateProfile(String? userId, Map<String, dynamic> data) async {
     final token = await storage.read(key: 'auth');
@@ -78,8 +75,6 @@ class ProfileController {
         // Update successful
         print('Data Berhasil Diedit!');
         print(res.data);
-        
-
       } else {
         // Handle error scenarios
         print('Update failed: ${res.data}');
@@ -89,6 +84,4 @@ class ProfileController {
       print('Error: $error');
     }
   }
-
-  
 }

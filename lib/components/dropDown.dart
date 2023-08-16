@@ -3,19 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ujilevel_bk/components/constant.dart';
 
-Widget CusDropDown(BuildContext context, {
-  required String? label,
-  required selectedType,
-  required onChanged,
-  required hint,
-  required List<String> item
-}) {
+Widget CusDropDown(BuildContext context,
+    {required String? label,
+    required selectedType,
+    required onChanged,
+    required hint,
+    required List<String> item}) {
   double width = MediaQuery.of(context).size.width;
   double height = MediaQuery.of(context).size.height;
 
   return Container(
-    margin: EdgeInsets.only(
-        bottom: height * .026),
+    margin: EdgeInsets.only(bottom: height * .026),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -32,35 +30,33 @@ Widget CusDropDown(BuildContext context, {
         ),
         DropdownButtonHideUnderline(
             child: DropdownButton2<String>(
-              isExpanded: true,
-              value: selectedType,
-              buttonStyleData: ButtonStyleData(
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                          color: CusColors.subHeader.withOpacity(.3)
-                      )
-                  )
-              ),
-              onChanged: onChanged,
-              hint: Text(
-                hint.toString(),
-                style: GoogleFonts.mulish(
-                  fontWeight: FontWeight.w700,
-                  fontSize: width * .032,
-                ),
-              ),
-              items: item.map((String item) => DropdownMenuItem<String>(
-                value: item,
-                child: Text(
-                  item,
-                  style: GoogleFonts.mulish(
-                    fontWeight: FontWeight.w700,
-                    fontSize: width * .032,
-                  ),
-                ),
-              )).toList(),
-            )
-        ),
+          isExpanded: true,
+          value: selectedType,
+          buttonStyleData: ButtonStyleData(
+              decoration: BoxDecoration(
+                  border:
+                      Border.all(color: CusColors.subHeader.withOpacity(.3)))),
+          onChanged: onChanged,
+          hint: Text(
+            hint.toString(),
+            style: GoogleFonts.mulish(
+              fontWeight: FontWeight.w700,
+              fontSize: width * .032,
+            ),
+          ),
+          items: item
+              .map((String item) => DropdownMenuItem<String>(
+                    value: item,
+                    child: Text(
+                      item,
+                      style: GoogleFonts.mulish(
+                        fontWeight: FontWeight.w700,
+                        fontSize: width * .032,
+                      ),
+                    ),
+                  ))
+              .toList(),
+        )),
       ],
     ),
   );
